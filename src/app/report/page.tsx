@@ -7,10 +7,22 @@ function formatDate(date: string) {
   return new Date(date).toLocaleDateString();
 }
 
+type Purchase = {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  cart: string[];
+  total: number;
+  createdAt: string;
+};
+
 export default function Report() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -31,7 +43,15 @@ export default function Report() {
       });
   }, [loggedIn]);
 
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   // Removed downloadPDF function and all PDFDocument usage since pdfkit is not available in the browser.
+
+  if (!hydrated) {
+    return null;
+  }
 
   if (!loggedIn) {
     return (
