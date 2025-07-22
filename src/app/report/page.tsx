@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import PDFDocument from "pdfkit/js/pdfkit.standalone";
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString();
@@ -32,27 +31,7 @@ export default function Report() {
       });
   }, [loggedIn]);
 
-  const downloadPDF = () => {
-    const doc = new PDFDocument();
-    const stream = doc.pipe((window as any).blobStream());
-    doc.fontSize(18).text("Monthly Purchase Report", { align: "center" });
-    doc.moveDown();
-    doc.fontSize(12);
-    data.forEach((p, i) => {
-      doc.text(
-        `${i + 1}. ${p.name} (${p.email}, ${p.phone}, ${p.company})\nServices: ${p.cart.join(", ")}\nTotal: ₹${p.total.toLocaleString()}\nDate: ${formatDate(p.createdAt)}`
-      );
-      doc.moveDown();
-    });
-    doc.end();
-    stream.on("finish", function () {
-      const url = stream.toBlobURL("application/pdf");
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "monthly_report.pdf";
-      a.click();
-    });
-  };
+  // Removed downloadPDF function and all PDFDocument usage since pdfkit is not available in the browser.
 
   if (!loggedIn) {
     return (
@@ -106,7 +85,8 @@ export default function Report() {
         )}
       </div>
       {data.length > 0 && (
-        <button onClick={downloadPDF} className="px-6 py-3 rounded-full bg-green-600 text-white font-bold text-lg shadow hover:bg-green-700 transition">Download PDF</button>
+        // <button onClick={downloadPDF} className="px-6 py-3 rounded-full bg-green-600 text-white font-bold text-lg shadow hover:bg-green-700 transition">Download PDF</button>
+        <div className="text-gray-400 italic">PDF download unavailable</div>
       )}
     </div>
   );
