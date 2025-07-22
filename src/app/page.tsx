@@ -7,14 +7,10 @@ import Link from "next/link";
 export default function Home() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setLoggedIn(!!localStorage.getItem("token"));
-    }
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
@@ -32,11 +28,6 @@ export default function Home() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownOpen, mobileMenuOpen]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.reload();
-  };
 
   return (
     <div className="font-sans bg-gradient-to-br from-blue-50 to-white min-h-screen flex flex-col">
@@ -100,30 +91,10 @@ export default function Home() {
               </div>
             )}
             <Link href="/pricing" className="block px-6 py-2 hover:bg-blue-50 text-gray-700 w-full text-center" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
-            {!loggedIn && (
-              <>
-                <Link href="/login" className="block px-6 py-2 hover:bg-blue-50 text-blue-700 w-full text-center" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-                <Link href="/signup" className="block px-6 py-2 hover:bg-green-50 text-green-700 w-full text-center" onClick={() => setMobileMenuOpen(false)}>SignUp</Link>
-              </>
-            )}
-            {loggedIn && (
-              <button onClick={handleLogout} className="block px-6 py-2 hover:bg-blue-50 text-blue-700 w-full text-center">Logout</button>
-            )}
           </div>
         )}
         <div className="flex items-center">
           <a href="#contact" className="ml-4 px-5 py-2 rounded-full bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition hidden md:inline-block">Let’s Connect</a>
-          {!loggedIn && (
-            <>
-              <Link href="/login" className="ml-2 px-5 py-2 rounded-full bg-blue-100 text-blue-700 font-semibold shadow hover:bg-blue-200 transition hidden md:inline-block">Login</Link>
-              <Link href="/signup" className="ml-2 px-5 py-2 rounded-full bg-green-100 text-green-700 font-semibold shadow hover:bg-green-200 transition hidden md:inline-block">SignUp</Link>
-            </>
-          )}
-          {loggedIn && (
-            <button onClick={handleLogout} title="Logout" className="ml-2 p-2 rounded-full hover:bg-blue-100 transition hidden md:inline-block">
-              <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" /></svg>
-            </button>
-          )}
         </div>
       </nav>
       <div className="h-20" /> {/* Spacer for navbar height */}
